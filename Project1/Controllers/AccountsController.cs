@@ -32,12 +32,16 @@ namespace Project1.Controllers
                 }
                 ModelState.Clear();
                 ViewBag.Message = acc.UserName + " " + "has successfully registered.";
+                ViewBag.Status = "success";
             }
             return View();
         }
 
         public ActionResult Login()
         {
+            ViewBag.Message = TempData["Message"];
+            ViewBag.Status = TempData["Status"];
+            
             return View();
         }
 
@@ -77,7 +81,21 @@ namespace Project1.Controllers
         {
             if(Session["UserId"] == null || Session["UserName"] == null)
             {
-                return RedirectToRoute("Login");
+                TempData["Message"] = "You can't perform that action.";
+                TempData["Status"] = "warning";
+                //ViewBag.Message = "You can't perform that action.";
+                //ViewBag.Status = "warning";
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                Session["UserId"] = null;
+                Session["UserName"] = null;
+                TempData["Message"] = "You have successfully logged out.";
+                TempData["Status"] = "info";
+                //ViewBag.Message = "You have successfully logged out.";
+                //ViewBag.Status = "info";
+                return RedirectToAction("Login");
             }
         }
     }
