@@ -13,5 +13,9 @@ namespace Project1.Controllers
         {
             return View();
         }
+        public ActionResult About()
+        {
+            return View();
+        }
     }
 }
