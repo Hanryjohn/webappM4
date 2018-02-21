@@ -5,10 +5,37 @@
 }
 
 <h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Register New", "Register")
-</p>
+<hr />
+<div>
+    @if (ViewBag.Message != null)
+    {
+        <div class="form-group">
+            @if (ViewBag.Status == "warning")
+            {
+                <div class="alert alert-warning">@ViewBag.Message</div>
+            }
+            @if (ViewBag.Status == "info")
+            {
+                <div class="alert alert-info">@ViewBag.Message</div>
+            }
+            @if (ViewBag.Status == "success")
+            {
+                <div class="alert alert-success">@ViewBag.Message</div>
+            }
+        </div>
+    }
+</div>
+<div>
+    @using (Html.BeginForm("Index", "Accounts", FormMethod.Get, new { @class = "form-inline mt-2 mt-md-0" }))
+    {
+        @Html.TextBox("searchString", null, new { @placeholder = "Search", @class = "form-control mr-sm-2" })
+        <input type="submit" value="Search" class="btn btn-outline-primary" />
+    }
+</div>
+<br/>
+<div>
+    <p>@Html.ActionLink("Register New", "Register")</p>
+</div>
 <table class="table">
     <tr>
         <th>
@@ -20,7 +47,8 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.UserName)
@@ -29,11 +57,10 @@
             @Html.DisplayFor(modelItem => item.UserEmail)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.UserId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.UserId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.UserId })
+            @Html.ActionLink("Edit", "Edit", new { id = item.UserId }, new { @class = "btn btn-warning" }) |
+            @Html.ActionLink("Details", "Details", new { id = item.UserId }, new { @class = "btn btn-info" }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.UserId }, new { @class = "btn btn-danger" })
         </td>
     </tr>
 }
-
 </table>

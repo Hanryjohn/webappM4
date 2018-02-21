@@ -18,13 +18,17 @@
     {
         <div class="form-group">
             @if(ViewBag.Status == "warning")
-                {
-                    <div class="alert alert-warning">@ViewBag.Message</div>
-                }
-                @if(ViewBag.Status == "info")
-                {
-                    <div class="alert alert-info">@ViewBag.Message</div>
-                }
+            {
+                <div class="alert alert-warning">@ViewBag.Message</div>
+            }
+            @if(ViewBag.Status == "info")
+            {
+                <div class="alert alert-info">@ViewBag.Message</div>
+            }
+            @if(ViewBag.Status == "success")
+            {
+                <div class="alert alert-success">@ViewBag.Message</div>
+            }            
         </div>
     }
     <div class="form-group">

@@ -1,0 +1,20 @@
+﻿@if (Session["UserId"] != null)
+{
+    using (Html.BeginForm("LoggedOut", "Accounts", FormMethod.Get, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                @Html.ActionLink("Hello " + Session["UserName"].ToString() + "!", null, null, routeValues: null, htmlAttributes: new { title = "Logged in as " + Session["UserName"].ToString() })
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Register", "Register", "Accounts", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Accounts", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
