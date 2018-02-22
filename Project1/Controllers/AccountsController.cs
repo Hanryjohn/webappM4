@@ -122,27 +122,13 @@ namespace Project1.Controllers
             }
             return View();
         }
-        /*
-        public ActionResult LoggedIn()
-        {
-            if(Session["UserId"] != null)
-            {
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                return RedirectToAction("Login");
-            }
-        }
-        */
+        
         public ActionResult LoggedOut()
         {
             if(Session["UserId"] == null || Session["UserName"] == null)
             {
                 TempData["Message"] = "You can't perform that action.";
                 TempData["Status"] = "warning";
-                //ViewBag.Message = "You can't perform that action.";
-                //ViewBag.Status = "warning";
                 return RedirectToAction("Login");
             }
             else
@@ -152,8 +138,6 @@ namespace Project1.Controllers
                 Session["UserRole"] = null;
                 TempData["Message"] = "You have successfully logged out.";
                 TempData["Status"] = "info";
-                //ViewBag.Message = "You have successfully logged out.";
-                //ViewBag.Status = "info";
                 return RedirectToAction("Login");
             }            
         }
