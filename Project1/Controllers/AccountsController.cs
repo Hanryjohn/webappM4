@@ -9,21 +9,6 @@ using Project1.Models;
 
 namespace Project1.Controllers
 {
-    /*
-    public class CustomAuthorize : AuthorizeAttribute
-    {
-        public override void OnAuthorization(AuthorizationContext filterContext)
-        {
-            base.OnAuthorization(filterContext);
-        }
-        public bool OnAuthorization(UserAccount u)
-        {
-            if (u.UserRole.Equals("admin"))
-                return true;
-            else return false;
-        }
-    }
-    */
     public class AccountsController : Controller
     {        
         // GET: Accounts
@@ -42,8 +27,14 @@ namespace Project1.Controllers
                 }
                 return View(users.ToList());
             }
-            else {
+            else if(Session["UserId"] != null && Session["UserRole"].ToString() != "admin") {
                 TempData["Message"] = "You don't have enough privilege to do that";
+                TempData["Status"] = "warning";
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                TempData["Message"] = "Please login first";
                 TempData["Status"] = "warning";
                 return RedirectToAction("Login");
             }
@@ -51,7 +42,22 @@ namespace Project1.Controllers
 
         public ActionResult Register()
         {
-            return View();
+            if (Session["UserId"] != null && Session["UserRole"].ToString() == "admin")
+            {
+                return View();
+            }
+            else if (Session["UserId"] != null && Session["UserRole"].ToString() != "admin")
+            {
+                TempData["Message"] = "You don't have enough privilege to do that";
+                TempData["Status"] = "warning";
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                TempData["Message"] = "Please login first";
+                TempData["Status"] = "warning";
+                return RedirectToAction("Login");
+            }
         }
         [HttpPost]
         public ActionResult Register(UserAccount acc)
@@ -72,7 +78,7 @@ namespace Project1.Controllers
         
         public ActionResult Login()
         {
-            if (Session["UserId"] == null)
+            if (Session["UserId"] == null || Session["UserRole"].ToString() != "admin")
             {
                 ViewBag.Message = TempData["Message"];
                 ViewBag.Status = TempData["Status"];
@@ -81,7 +87,7 @@ namespace Project1.Controllers
             else
             {
                 TempData["Message"] = "You're already logged in";
-                TempData["Status"] = "warning";
+                TempData["Status"] = "info";
                 return RedirectToAction("Index");
             }
         }
@@ -91,14 +97,23 @@ namespace Project1.Controllers
         {
             using(WebAppEntities db = new WebAppEntities())
             {
-                //var usr = db.UserAccounts.Where(u => u.UserName.CompareTo(acc.UserName) == 0 && u.UserPassword.CompareTo(acc.UserPassword) == 0).First();
                 var usr = db.UserAccounts.Where(u => u.UserName.Equals(acc.UserName) && u.UserPassword.Equals(acc.UserPassword)).FirstOrDefault(); //for case sensitive check, change collation for column in database to Latin1_General_CS_AS 
                 if (usr != null)
                 {
                     Session["UserId"] = usr.UserId.ToString();
                     Session["UserName"] = usr.UserName.ToString();
                     Session["UserRole"] = usr.UserRole.ToString();
-                    return RedirectToAction("Index");
+                    if (Session["UserRole"].ToString() == "admin")
+                        return RedirectToAction("Index");
+                    else
+                    {
+                        TempData["Message"] = "You don't have enough privilege";
+                        TempData["Status"] = "warning";
+                        Session["UserId"] = null;
+                        Session["UserName"] = null;
+                        Session["UserRole"] = null;
+                        return RedirectToAction("Login");
+                    }
                 }
                 else
                 {
@@ -134,6 +149,7 @@ namespace Project1.Controllers
             {
                 Session["UserId"] = null;
                 Session["UserName"] = null;
+                Session["UserRole"] = null;
                 TempData["Message"] = "You have successfully logged out.";
                 TempData["Status"] = "info";
                 //ViewBag.Message = "You have successfully logged out.";
@@ -142,24 +158,25 @@ namespace Project1.Controllers
             }            
         }
         public ActionResult Details(int? id)
-        {
-            if (id == null)
+        {           
+            if (id == null || Session["UserId"] == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-                ;
+                        
             UserAccount u = new WebAppEntities().UserAccounts.Find(id);
             if (u == null)
             {
                 return HttpNotFound();
             }
             return View(u);
+            
         }
         
         // GET: Movies/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (id == null || Session["UserId"] == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -168,7 +185,7 @@ namespace Project1.Controllers
             {
                 return HttpNotFound();
             }
-            return View(u);
+            return View(u);                                   
         }
 
         [HttpPost]
@@ -190,16 +207,18 @@ namespace Project1.Controllers
         // GET: Movies/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (id == null || Session["UserId"] == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            
             UserAccount u = new WebAppEntities().UserAccounts.Find(id);
             if (u == null)
             {
                 return HttpNotFound();
             }
             return View(u);
+            
         }
 
         // POST: Movies/Delete/5
