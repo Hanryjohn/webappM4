@@ -9,22 +9,44 @@ using Project1.Models;
 
 namespace Project1.Controllers
 {
-    public class AccountsController : Controller
+    /*
+    public class CustomAuthorize : AuthorizeAttribute
     {
+        public override void OnAuthorization(AuthorizationContext filterContext)
+        {
+            base.OnAuthorization(filterContext);
+        }
+        public bool OnAuthorization(UserAccount u)
+        {
+            if (u.UserRole.Equals("admin"))
+                return true;
+            else return false;
+        }
+    }
+    */
+    public class AccountsController : Controller
+    {        
         // GET: Accounts
         public ActionResult Index(string searchString)
         {
-            ViewBag.Message = TempData["Message"];
-            ViewBag.Status = TempData["Status"];
+            if (Session["UserId"] != null && Session["UserRole"].ToString() == "admin"){
+                ViewBag.Message = TempData["Message"];
+                ViewBag.Status = TempData["Status"];
 
-            WebAppEntities db = new WebAppEntities();
-            var users = from u in db.UserAccounts select u;
+                WebAppEntities db = new WebAppEntities();
+                var users = from u in db.UserAccounts select u;
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                users = users.Where(a => a.UserName.Contains(searchString));
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    users = users.Where(a => a.UserName.Contains(searchString));
+                }
+                return View(users.ToList());
             }
-            return View(users.ToList());         
+            else {
+                TempData["Message"] = "You don't have enough privilege to do that";
+                TempData["Status"] = "warning";
+                return RedirectToAction("Login");
+            }
         }
 
         public ActionResult Register()
@@ -47,26 +69,36 @@ namespace Project1.Controllers
             }
             return View();
         }
-
+        
         public ActionResult Login()
         {
-            ViewBag.Message = TempData["Message"];
-            ViewBag.Status = TempData["Status"];
-            
-            return View();
+            if (Session["UserId"] == null)
+            {
+                ViewBag.Message = TempData["Message"];
+                ViewBag.Status = TempData["Status"];
+                return View();
+            }
+            else
+            {
+                TempData["Message"] = "You're already logged in";
+                TempData["Status"] = "warning";
+                return RedirectToAction("Index");
+            }
         }
-
+        
         [HttpPost]
         public ActionResult Login(UserAccount acc)
         {
             using(WebAppEntities db = new WebAppEntities())
             {
-                var usr = db.UserAccounts.Where(u => u.UserName == acc.UserName && u.UserPassword == acc.UserPassword).FirstOrDefault();
-                if(usr != null)
+                //var usr = db.UserAccounts.Where(u => u.UserName.CompareTo(acc.UserName) == 0 && u.UserPassword.CompareTo(acc.UserPassword) == 0).First();
+                var usr = db.UserAccounts.Where(u => u.UserName.Equals(acc.UserName) && u.UserPassword.Equals(acc.UserPassword)).FirstOrDefault(); //for case sensitive check, change collation for column in database to Latin1_General_CS_AS 
+                if (usr != null)
                 {
                     Session["UserId"] = usr.UserId.ToString();
                     Session["UserName"] = usr.UserName.ToString();
-                    return RedirectToAction("LoggedIn");
+                    Session["UserRole"] = usr.UserRole.ToString();
+                    return RedirectToAction("Index");
                 }
                 else
                 {
@@ -75,19 +107,19 @@ namespace Project1.Controllers
             }
             return View();
         }
-
+        /*
         public ActionResult LoggedIn()
         {
             if(Session["UserId"] != null)
             {
-                return View();
+                return RedirectToAction("Index");
             }
             else
             {
                 return RedirectToAction("Login");
             }
         }
-
+        */
         public ActionResult LoggedOut()
         {
             if(Session["UserId"] == null || Session["UserName"] == null)
@@ -123,7 +155,7 @@ namespace Project1.Controllers
             }
             return View(u);
         }
-
+        
         // GET: Movies/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -154,7 +186,7 @@ namespace Project1.Controllers
             }
             return View(acc);
         }
-
+        
         // GET: Movies/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -183,5 +215,6 @@ namespace Project1.Controllers
             TempData["Status"] = "success";
             return RedirectToAction("Index");
         }
+        
     }
 }

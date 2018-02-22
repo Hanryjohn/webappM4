@@ -1,0 +1,32 @@
+﻿nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 20px;
+    padding: 14px 0;
+    margin: 0 20px;
+    font-weight: bold;
+    position: relative;
+}
+
+
+    nav ul li a:after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        height: 2px;
+        background-color: #D13840;
+        transform: scale3d(0,1,1);
+        transition: .4s all;
+    }
+
+    nav ul li a:hover:after {
+        transform: scale3d(1,1,1);
+    }
+
+    nav ul li a:hover {
+        transition: .4s all;
+        color: #d13840;
+    }
