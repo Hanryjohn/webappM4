@@ -44,9 +44,6 @@
         <th>
             @Html.DisplayNameFor(model => model.UserEmail)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserRole)
-        </th>
         <th></th>
     </tr>
 
@@ -58,9 +55,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.UserEmail)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserRole)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.UserId }, new { @class = "btn btn-warning" }) |

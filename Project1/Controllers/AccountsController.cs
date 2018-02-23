@@ -10,7 +10,8 @@ using Project1.Models;
 namespace Project1.Controllers
 {
     public class AccountsController : Controller
-    {        
+    {
+        /*
         // GET: Accounts
         public ActionResult Index(string searchString)
         {
@@ -39,46 +40,40 @@ namespace Project1.Controllers
                 return RedirectToAction("Login");
             }
         }
-
+        */
         public ActionResult Register()
         {
-            if (Session["UserId"] != null && Session["UserRole"].ToString() == "admin")
-            {
-                return View();
-            }
-            else if (Session["UserId"] != null && Session["UserRole"].ToString() != "admin")
-            {
-                TempData["Message"] = "You don't have enough privilege to do that";
-                TempData["Status"] = "warning";
-                return RedirectToAction("Login");
-            }
+            if (Session["UserId"] != null)
+            {                
+                return RedirectToAction("Index", "Home");
+            }            
             else
             {
-                TempData["Message"] = "Please login first";
-                TempData["Status"] = "warning";
-                return RedirectToAction("Login");
+                return View();
             }
         }
         [HttpPost]
         public ActionResult Register(UserAccount acc)
         {
+            acc.UserRole = "user";
             if (ModelState.IsValid)
             {
                 using (WebAppEntities db = new WebAppEntities())
                 {
                     db.UserAccounts.Add(acc); // add useraccount
-                    db.SaveChanges(); //save changes to database
+                    db.SaveChanges(); //save changes to database                    
                 }
-                ModelState.Clear();
-                ViewBag.Message = acc.UserName + " " + "has successfully registered.";
-                ViewBag.Status = "success";
+                Session["UserId"] = acc.UserId.ToString();
+                Session["UserName"] = acc.UserName.ToString();
+                Session["UserRole"] = acc.UserRole.ToString();
+                ModelState.Clear();                
             }
-            return View();
+            return RedirectToAction("Index", "Home");
         }
         
         public ActionResult Login()
         {
-            if (Session["UserId"] == null || Session["UserRole"].ToString() != "admin")
+            if (Session["UserId"] == null)
             {
                 ViewBag.Message = TempData["Message"];
                 ViewBag.Status = TempData["Status"];
@@ -88,7 +83,7 @@ namespace Project1.Controllers
             {
                 TempData["Message"] = "You're already logged in";
                 TempData["Status"] = "info";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
         }
         
@@ -103,17 +98,7 @@ namespace Project1.Controllers
                     Session["UserId"] = usr.UserId.ToString();
                     Session["UserName"] = usr.UserName.ToString();
                     Session["UserRole"] = usr.UserRole.ToString();
-                    if (Session["UserRole"].ToString() == "admin")
-                        return RedirectToAction("Index");
-                    else
-                    {
-                        TempData["Message"] = "You don't have enough privilege";
-                        TempData["Status"] = "warning";
-                        Session["UserId"] = null;
-                        Session["UserName"] = null;
-                        Session["UserRole"] = null;
-                        return RedirectToAction("Login");
-                    }
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -125,7 +110,7 @@ namespace Project1.Controllers
         
         public ActionResult LoggedOut()
         {
-            if(Session["UserId"] == null || Session["UserName"] == null)
+            if(Session["UserId"] == null)
             {
                 TempData["Message"] = "You can't perform that action.";
                 TempData["Status"] = "warning";
@@ -143,24 +128,24 @@ namespace Project1.Controllers
         }
         public ActionResult Details(int? id)
         {           
-            if (id == null || Session["UserId"] == null)
+            if (id == null || Session["UserId"] == null || Session["UserId"].ToString() != id.ToString())
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-                        
+            }                       
             UserAccount u = new WebAppEntities().UserAccounts.Find(id);
             if (u == null)
             {
                 return HttpNotFound();
             }
-            return View(u);
-            
+            ViewBag.Message = TempData["Message"];
+            ViewBag.Status = TempData["Status"];
+            return View(u);            
         }
         
         // GET: Movies/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null || Session["UserId"] == null)
+            if (id == null || Session["UserId"] == null || Session["UserId"].ToString() != id.ToString())
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -175,6 +160,7 @@ namespace Project1.Controllers
         [HttpPost]
         public ActionResult Edit(UserAccount acc)
         {
+            acc.UserRole = "user";
             if (ModelState.IsValid)
             {
                 WebAppEntities db = new WebAppEntities();
@@ -183,11 +169,11 @@ namespace Project1.Controllers
                 ModelState.Clear();
                 TempData["Message"] = acc.UserName + " " + "has been successfully edited.";
                 TempData["Status"] = "success";
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = acc.UserId });
             }
             return View(acc);
         }
-        
+        /*
         // GET: Movies/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -204,7 +190,7 @@ namespace Project1.Controllers
             return View(u);
             
         }
-
+        
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -218,6 +204,6 @@ namespace Project1.Controllers
             TempData["Status"] = "success";
             return RedirectToAction("Index");
         }
-        
+        */
     }
 }
