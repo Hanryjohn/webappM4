@@ -5,7 +5,22 @@
 }
 
 <h2>Index</h2>
-
+{
+        <div class="form-group">
+            @if(ViewBag.Status == "warning")
+            {
+                <div class="alert alert-warning">@ViewBag.Message</div>
+            }
+            @if(ViewBag.Status == "info")
+            {
+                <div class="alert alert-info">@ViewBag.Message</div>
+            }
+            @if(ViewBag.Status == "success")
+            {
+                <div class="alert alert-success">@ViewBag.Message</div>
+            }            
+        </div>
+    }
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>

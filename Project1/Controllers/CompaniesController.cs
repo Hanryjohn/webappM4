@@ -17,13 +17,32 @@ namespace Project1.Controllers
         // GET: Companies
         public ActionResult Index()
         {
-            return View(db.Companies.ToList());
+            if (Session["UserId"] != null && Session["UserRole"].ToString() == "admin")
+            {
+                ViewBag.Message = TempData["Message"];
+                ViewBag.Status = TempData["Status"];
+                                
+                return View(db.Companies.ToList());
+            }
+            else if (Session["UserId"] != null && Session["UserRole"].ToString() != "admin")
+            {
+                TempData["Message"] = "You don't have enough privilege to do that";
+                TempData["Status"] = "warning";
+                return RedirectToAction("Login", "UserAccounts");
+            }
+            else
+            {
+                TempData["Message"] = "Please login first";
+                TempData["Status"] = "warning";
+                return RedirectToAction("Login", "UserAccounts");
+            }
+                
         }
 
         // GET: Companies/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            if (id == null || Session["UserId"] == null || Session["UserId"].ToString() != "admin")
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -35,15 +54,32 @@ namespace Project1.Controllers
             return View(company);
         }
 
-        public ActionResult Show(int id)
+        public ActionResult Show(int? id)
         {
-            var imageData = db.Companies.Find(id).CompImg;
-            return File(imageData, "image/jpg");
+            if (id == null || Session["UserId"] == null || Session["UserId"].ToString() != "admin")
+            {
+                var imageData = db.Companies.Find(id).CompImg;
+                return File(imageData, "image/jpg");
+            }
+            return null;
+                
         }
-        /*
+        
         // GET: Companies/Create
         public ActionResult Create()
         {
+            if (Session["UserId"] == null)
+            {
+                TempData["Message"] = "Please login first";
+                TempData["Status"] = "warning";
+                return RedirectToAction("Login", "UserAccounts");
+            }
+            if(Session["UserRole"].ToString() != "admin")
+            {
+                TempData["Message"] = "You don't have enough privilege to do that";
+                TempData["Status"] = "warning";
+                return RedirectToAction("Login", "UserAccounts");
+            }                
             return View();
         }
 
@@ -68,17 +104,22 @@ namespace Project1.Controllers
         // GET: Companies/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if(Session["UserId"]!=null || Session["UserRole"].ToString() != "admin")
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Company company = db.Companies.Find(id);
+                if (company == null)
+                {
+                    return HttpNotFound();
+                }
+                ViewBag.CompImg = company.CompImg;
+                return View(company);
             }
-            Company company = db.Companies.Find(id);
-            if (company == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.CompImg = company.CompImg;
-            return View(company);
+            return RedirectToAction("Login", "UserAccounts");
+            
         }
 
         // POST: Companies/Edit/5
@@ -102,16 +143,20 @@ namespace Project1.Controllers
         // GET: Companies/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (Session["UserId"] != null || Session["UserRole"].ToString() != "admin")
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Company company = db.Companies.Find(id);
+                if (company == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(company);
             }
-            Company company = db.Companies.Find(id);
-            if (company == null)
-            {
-                return HttpNotFound();
-            }
-            return View(company);
+            return RedirectToAction("Login", "UserAccounts");
         }
 
         // POST: Companies/Delete/5
@@ -124,7 +169,7 @@ namespace Project1.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        */
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)
