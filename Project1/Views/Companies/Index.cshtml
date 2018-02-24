@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Project1.Models.Company>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CompImg)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompRep)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompDOE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompAddr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompCat)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompCont)
+        </th>        
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <img src='@Url.Action( "Show", "Companies", new { id = item.CompId } )' height="200" width="200" />
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompRep)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompDOE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompAddr)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompCat)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompCont)
+        </td>        
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.CompId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.CompId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.CompId })
+        </td>
+    </tr>
+}
+
+</table>
