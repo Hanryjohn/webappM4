@@ -17,28 +17,39 @@ namespace Project1.Controllers
         // GET: Companies
         public ActionResult Index()
         {
-            return View(db.Companies.ToList());
+            if (Session["UserId"] != null)
+                return View(db.Companies.ToList());
+            return HttpNotFound();
         }
 
         // GET: Companies/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            if (Session["UserId"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Company company = db.Companies.Find(id);
+                if (company == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(company);
             }
-            Company company = db.Companies.Find(id);
-            if (company == null)
-            {
-                return HttpNotFound();
-            }
-            return View(company);
+            return HttpNotFound();
+                        
         }
 
         public ActionResult Show(int id)
         {
-            var imageData = db.Companies.Find(id).CompImg;
-            return File(imageData, "image/jpg");
+            if (Session["UserId"] != null)
+            {
+                var imageData = db.Companies.Find(id).CompImg;
+                return File(imageData, "image/jpg");
+            }
+            return null;            
         }
         /*
         // GET: Companies/Create
