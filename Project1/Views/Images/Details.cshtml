@@ -1,0 +1,17 @@
+﻿@model Project1.Models.Image
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Image</h4>
+    <hr />
+    <img src='@Url.Action( "Show", "Images", new { id = Model.id } )' height="200" width="200", style="image-orientation:180deg;"/>    
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
