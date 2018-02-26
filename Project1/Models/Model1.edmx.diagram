@@ -4,8 +4,9 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="459e847da1ac47828dcf6173c92f56d7" Name="Diagram1">
-        <EntityTypeShape EntityType="WebAppModel.UserAccount" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="bcc61cd3545f43e58efefe908668bb2f" Name="Diagram1">
+        <EntityTypeShape EntityType="WebAppModel.Company" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WebAppModel.UserAccount" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

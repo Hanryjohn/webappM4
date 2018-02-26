@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Project1.Models.Company>
+@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Index";
+
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CompImg)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompRep)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompDOE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompAddr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompCat)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompCont)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in ViewBag.onePage)
+    {
+        <tr>
+            <td>
+                <img src='@Url.Action( "Show", "Companies", new { id = item.CompId } )' height="200" width="200" />
+            </td>
+            <td>
+                @item.CompName
+            </td>
+            <td>
+                @item.CompRep
+            </td>
+            <td>
+                @item.CompDOE
+            </td>
+            <td>
+                @item.CompAddr
+            </td>
+            <td>
+                @item.CompCat
+            </td>
+            <td>
+                @item.CompEmail
+            </td>
+            <td>
+                @item.CompCont
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.CompId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.CompId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.CompId })
+            </td>
+        </tr>
+    }
+
+</table>
+@Html.PagedListPager((IPagedList)ViewBag.onePage, page => Url.Action("Index", new { page }))

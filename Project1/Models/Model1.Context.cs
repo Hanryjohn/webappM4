@@ -25,6 +25,7 @@ namespace Project1.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<UserAccount> UserAccounts { get; set; }
     }
 }

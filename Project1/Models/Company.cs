@@ -12,12 +12,17 @@ namespace Project1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class UserAccount
+    public partial class Company
     {
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-        public string UserEmail { get; set; }
-        public string UserPassword { get; set; }
-        public string UserRole { get; set; }
+        public int CompId { get; set; }
+        public byte[] CompImg { get; set; }
+        public string CompName { get; set; }
+        public string CompRep { get; set; }
+        public Nullable<System.DateTime> CompDOE { get; set; }
+        public string CompAddr { get; set; }
+        public string CompCat { get; set; }
+        public string CompEmail { get; set; }
+        public string CompCont { get; set; }
+        public string CompDesc { get; set; }
     }
 }
