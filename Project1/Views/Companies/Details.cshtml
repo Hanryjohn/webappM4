@@ -1,0 +1,82 @@
+﻿@model Project1.Models.tbCompany
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>tbCompany</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.compName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.compName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.compRep)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.compRep)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.compDOE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.compDOE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.compAddr)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.compAddr)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.compCat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.compCat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.compEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.compEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.compContact)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.compContact)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.compDesc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.compDesc)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.compID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
