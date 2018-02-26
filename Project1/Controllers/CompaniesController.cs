@@ -15,9 +15,14 @@ namespace Project1.Controllers
         private webappM4Entities db = new webappM4Entities();
 
         // GET: Companies
-        public ActionResult Index()
+        public ActionResult Index(string searchString)
         {
-            return View(db.tbCompanies.ToList());
+            var companies = from c in db.tbCompanies select c;
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                companies = companies.Where(c => c.compName.Contains(searchString));
+            }
+            return View(companies.ToList());
         }
 
         // GET: Companies/Details/5
