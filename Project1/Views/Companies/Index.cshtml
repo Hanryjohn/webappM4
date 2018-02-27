@@ -4,77 +4,122 @@
 
 @{
     ViewBag.Title = "Index";
-
+    Layout = null;
 }
 
-<h2>Index</h2>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.CompImg)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompRep)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompDOE)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompAddr)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompCat)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompEmail)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompCont)
-        </th>
-        <th></th>
-    </tr>
+    <title>BUSINEMATCH-Service</title>
 
-    @foreach (var item in ViewBag.onePage)
-    {
-        <tr>
-            <td>
-                <img src='@Url.Action( "Show", "Companies", new { id = item.CompId } )' height="200" width="200" />
-            </td>
-            <td>
-                @item.CompName
-            </td>
-            <td>
-                @item.CompRep
-            </td>
-            <td>
-                @item.CompDOE
-            </td>
-            <td>
-                @item.CompAddr
-            </td>
-            <td>
-                @item.CompCat
-            </td>
-            <td>
-                @item.CompEmail
-            </td>
-            <td>
-                @item.CompCont
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.CompId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.CompId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.CompId })
-            </td>
-        </tr>
-    }
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-</table>
-@Html.PagedListPager((IPagedList)ViewBag.onePage, page => Url.Action("Index", new { page }))
+    <!-- Custom styles for this template -->
+    <link href="../../Content/dashboard.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">BUSINEMATCH</a>
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="#">Sign out</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <div class="d-md-inline">                        
+                        <div class="col-lg-12">
+                            <!--Search Box-->
+                            @using (Html.BeginForm("Index", "Companies", FormMethod.Get, new { @class = "form-inline mt-2 mt-md-0", @id = "frmSearch" }))
+                            {
+                                @Html.TextBox("searchString", null, new { @placeholder = "Search Company ...", @class = "form-control border border-secondary mr-sm-2", @id = "searchString" })
+                                
+                                <input type="submit" value="Search" class="btn btn-outline-primary" />
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" disabled>
+                                    <label class="form-check-label" for="defaultCheck2">
+                                        Disabled checkbox
+                                    </label>
+                                </div>
+                            }
+                        
+                        </div>
+                    </div>
+                    <div class="col-lg-12 d-md-inline">
+                        <div class="col-lg-12 col-md-8 col-sm-4 col-ex-2">
+                            <h6><b>Find Through:</b></h6>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 pt-0">
+                        <h6>
+                            <span data-feather="package"></span>
+                            Categories:
+                        </h6>
+                    </div>
+                    <div class="col-lg-12 d-md-block ">
+                        <label class="form-check-label">
+                            
+                        </label>
+                    </div>
+
+
+
+                </div>
+            </nav>
+        </div>
+
+        <nav class="col-md-9 ml-sm-auto col-lg-10 pt-3 text-center">
+            <!-- Splitted rightside space= 10cols  -->
+            <div class="row pt-1 pb-4 px-3">
+                @foreach (var c in ViewBag.onePage)
+        {
+            <!--row 1; padding-bottom:5-->
+            <nav class="col-lg-3 ">
+                <a href="@Url.Action("Details", "Companies", new { id = c.CompId})">
+                    <img class="rounded-circle" src='@Url.Action( "Show", "Companies", new { id = c.CompId } )'
+                         alt="Generic placeholder image" width="180" height="180">
+                    <h4>@c.CompName</h4>
+                </a>
+                <h5>@c.CompCat</h5>
+            </nav>
+}
+            </div>
+            @Html.PagedListPager((IPagedList)ViewBag.onePage, page => Url.Action("Index", new { page }))
+            <div class="pt-3 pb-2">
+                <!--Buttons-->
+                <!--
+        <button type="button" class="btn btn-outline-dark">Previous</button>
+        <button type="button" class="btn btn-outline-success">Next</button>
+            -->
+            </div>
+        </nav>
+
+    </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="~/Scripts/custom.js"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+        feather.replace()
+    </script>
+</body>
+</html>
+

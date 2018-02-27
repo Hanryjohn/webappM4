@@ -26,7 +26,7 @@ namespace Project1.Controllers
                     comps = comps.Where(c => c.CompName.Contains(searchString));
                 }
                 int pageNum = (page ?? 1);
-                var onePage = comps.OrderBy(i => i.CompId).ToPagedList(pageNum, 2);
+                var onePage = comps.OrderBy(i => i.CompId).ToPagedList(pageNum, 12);
 
                 ViewBag.onePage = onePage;
                 return View();
@@ -61,7 +61,9 @@ namespace Project1.Controllers
         {
             if (Session["UserId"] != null)
             {
+                
                 var imageData = db.Companies.Find(id).CompImg;
+                
                 return File(imageData, "image/jpg");
             }
             return null;

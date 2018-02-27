@@ -29,7 +29,7 @@
     @using (Html.BeginForm("Index", "Accounts", FormMethod.Get, new { @class = "form-inline mt-2 mt-md-0" }))
     {
         @Html.TextBox("searchString", null, new { @placeholder = "Search", @class = "form-control mr-sm-2" })
-        <input type="submit" value="Search" class="btn btn-outline-primary" />
+        <input id="btnSearch" type="submit" value="Search" class="btn btn-outline-primary" />
     }
 </div>
 <br/>
